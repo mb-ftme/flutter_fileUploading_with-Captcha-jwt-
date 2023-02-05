@@ -69,29 +69,29 @@ class HomePage extends StatelessWidget {
             },
             child: const Text('tap to Login'),
           ),
-          TextButton(
-            onPressed: () async {
-              Navigator.of(ctx).push(MaterialPageRoute(
-                  builder: ((context) => const RegisterView())));
-            },
-            child: const Text('tap to register'),
+          // TextButton(
+          //   onPressed: () async {
+          //     Navigator.of(ctx).push(MaterialPageRoute(
+          //         builder: ((context) => const RegisterView())));
+          //   },
+          //   child: const Text('tap to register'),
 
-            // body: FutureBuilder(
-            //     // future: loginReturnsFuture(userName: 'fm', password: '123'),
-            //     future: waitForSeconds(),
-            //     builder: ((ctx, snapshot) {
-            //       switch (snapshot.connectionState) {
-            //         case ConnectionState.done:
-            //           print(snapshot.data!);
-            //           // Navigator.of(ctx).pop();
-            //           return const LoginView();
-            //         default:
-            //           // Navigator.of(context).push(
-            //           //     MaterialPageRoute(builder: (context) => const LoginView()));
-            //           return const Text("Loading waiting for number ");
-            //       }
-            //     })),
-          )
+          // body: FutureBuilder(
+          //     // future: loginReturnsFuture(userName: 'fm', password: '123'),
+          //     future: waitForSeconds(),
+          //     builder: ((ctx, snapshot) {
+          //       switch (snapshot.connectionState) {
+          //         case ConnectionState.done:
+          //           print(snapshot.data!);
+          //           // Navigator.of(ctx).pop();
+          //           return const LoginView();
+          //         default:
+          //           // Navigator.of(context).push(
+          //           //     MaterialPageRoute(builder: (context) => const LoginView()));
+          //           return const Text("Loading waiting for number ");
+          //       }
+          //     })),
+          // )
         ]));
   }
 }
