@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:file_upload_web/profile/network/network.dart';
+import 'package:file_upload_web/profile/view/successDialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -15,7 +16,7 @@ class uploadScreen extends StatefulWidget {
 class _uploadScreenState extends State<uploadScreen> {
   List<PlatformFile>? _paths;
 
-  void pickFiles() async {
+  void pickFiles(BuildContext context) async {
     try {
       _paths = (await FilePicker.platform.pickFiles(
         type: FileType.custom,
@@ -25,8 +26,6 @@ class _uploadScreenState extends State<uploadScreen> {
       ))
           ?.files;
     } on PlatformException catch (e) {
-      print('looooooooooooooooooooooooooooooooooooooooooq');
-      log('Unsupported operation' + e.toString());
     } catch (e) {
       log(e.toString());
     }
@@ -34,6 +33,12 @@ class _uploadScreenState extends State<uploadScreen> {
       if (_paths != null) {
         //passing file bytes and file name for API call
         ApiClient.uploadFile(_paths!.first.bytes!, _paths!.first.name);
+        showDialog(
+          context: context,
+          builder: (context) {
+            return const DialogScreen();
+          },
+        );
       }
     });
   }
@@ -43,7 +48,7 @@ class _uploadScreenState extends State<uploadScreen> {
     MediaQueryData x = MediaQuery.of(context);
     return Container(
       child: InkWell(
-        onTap: pickFiles,
+        onTap: () => pickFiles(context),
         child: Align(
           alignment: Alignment.center,
           child: Container(

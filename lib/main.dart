@@ -15,7 +15,7 @@ void main() {
       primarySwatch: Colors.blueGrey,
       // primarySwatch: Colors.green,
     ),
-    home: ProfileScreen(),
+    home: LoginView(),
   ));
 }
 

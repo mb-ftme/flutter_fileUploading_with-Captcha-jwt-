@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:file_upload_web/profile/network/network.dart';
+import 'package:file_upload_web/profile/view/register-view.dart';
 import 'package:file_upload_web/profile/view/uploadScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -58,7 +59,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
           ),
           body: TabBarView(
-            children: [uploadScreen()],
+            children: [uploadScreen(), RegisterView()],
           ),
         ),
       ),

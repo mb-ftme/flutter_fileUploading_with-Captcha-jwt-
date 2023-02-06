@@ -1,16 +1,25 @@
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
+import 'dart:io';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
-class DialogScreen extends StatefulWidget {
+class DialogScreen extends StatelessWidget {
   const DialogScreen({super.key});
 
   @override
-  State<DialogScreen> createState() => _DialogScreenState();
-}
-
-class _DialogScreenState extends State<DialogScreen> {
-  @override
   Widget build(BuildContext context) {
-    return Container();
+    return Container(
+      child: SimpleDialog(
+        title: Text('uploaded successfully'),
+        children: [
+          SimpleDialogOption(
+            onPressed: () {
+              Navigator.pop(context, ["OK"]);
+            },
+            child: const Text('OK'),
+          ),
+        ],
+        elevation: 10,
+      ),
+    );
   }
 }
