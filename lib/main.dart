@@ -12,6 +12,7 @@ void main() {
     debugShowCheckedModeBanner: false,
     theme: ThemeData(
       primarySwatch: Colors.blueGrey,
+      // primarySwatch: Colors.green,
     ),
     home: const LoginView(),
   ));
