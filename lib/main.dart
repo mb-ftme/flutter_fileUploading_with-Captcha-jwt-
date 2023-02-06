@@ -8,11 +8,12 @@ import 'package:http/http.dart' as http;
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(MaterialApp(
-    title: 'Flutterrrrrr',
+    title: 'app',
+    debugShowCheckedModeBanner: false,
     theme: ThemeData(
-      primarySwatch: Colors.pink,
+      primarySwatch: Colors.blueGrey,
     ),
-    home: const HomePage(),
+    home: const LoginView(),
   ));
 }
 
@@ -58,40 +59,52 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext ctx) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('Home'),
-        ),
-        body: Column(children: [
-          TextButton(
-            onPressed: () async {
-              Navigator.of(ctx).push(
-                  MaterialPageRoute(builder: ((context) => const LoginView())));
-            },
-            child: const Text('tap to Login'),
-          ),
-          // TextButton(
-          //   onPressed: () async {
-          //     Navigator.of(ctx).push(MaterialPageRoute(
-          //         builder: ((context) => const RegisterView())));
-          //   },
-          //   child: const Text('tap to register'),
+      appBar: AppBar(
+        title: const Text('Chapar'),
+      ),
+    );
+    // body: Column(children: [
+    //   SizedBox(
+    //     height: 40.0,
+    //     width: 100,
+    //     child: ElevatedButton(
+    //       onPressed: () async {
+    //         Navigator.of(ctx).push(MaterialPageRoute(
+    //             builder: ((context) => const LoginView())));
+    //       },
+    //       style: ElevatedButton.styleFrom(
+    //         primary: Colors.blueGrey,
+    //       ),
+    //       child: const Text('Login'),
+    //     ),
+    //   ),
+    //   const Padding(
+    //     padding: EdgeInsets.symmetric(vertical: 16.0),
+    //     child: Divider(),
+    //   ),
+    //   // TextButton(
+    //   //   onPressed: () async {
+    //   //     Navigator.of(ctx).push(MaterialPageRoute(
+    //   //         builder: ((context) => const RegisterView())));
+    //   //   },
+    //   //   child: const Text('tap to register'),
 
-          // body: FutureBuilder(
-          //     // future: loginReturnsFuture(userName: 'fm', password: '123'),
-          //     future: waitForSeconds(),
-          //     builder: ((ctx, snapshot) {
-          //       switch (snapshot.connectionState) {
-          //         case ConnectionState.done:
-          //           print(snapshot.data!);
-          //           // Navigator.of(ctx).pop();
-          //           return const LoginView();
-          //         default:
-          //           // Navigator.of(context).push(
-          //           //     MaterialPageRoute(builder: (context) => const LoginView()));
-          //           return const Text("Loading waiting for number ");
-          //       }
-          //     })),
-          // )
-        ]));
+    //   // body: FutureBuilder(
+    //   //     // future: loginReturnsFuture(userName: 'fm', password: '123'),
+    //   //     future: waitForSeconds(),
+    //   //     builder: ((ctx, snapshot) {
+    //   //       switch (snapshot.connectionState) {
+    //   //         case ConnectionState.done:
+    //   //           print(snapshot.data!);
+    //   //           // Navigator.of(ctx).pop();
+    //   //           return const LoginView();
+    //   //         default:
+    //   //           // Navigator.of(context).push(
+    //   //           //     MaterialPageRoute(builder: (context) => const LoginView()));
+    //   //           return const Text("Loading waiting for number ");
+    //   //       }
+    //   //     })),
+    //   // )
+    // ]));
   }
 }

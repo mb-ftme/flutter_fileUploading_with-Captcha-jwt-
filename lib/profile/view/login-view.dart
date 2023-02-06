@@ -1,9 +1,10 @@
 import 'dart:convert';
+import 'dart:html';
 
 import 'package:file_upload_web/profile/view/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:local_captcha/local_captcha.dart';
 
 class LoginView extends StatefulWidget {
@@ -17,11 +18,16 @@ class _LoginViewState extends State<LoginView> {
   late final TextEditingController _email;
   late final TextEditingController _password;
 
+  final _captchaFormKey = GlobalKey<FormState>();
+
+  final _localCaptchaController = LocalCaptchaController();
+  final _configFormData = ConfigFormData();
+  var _inputCode = '';
   @override
   void initState() {
     _email = TextEditingController();
     _password = TextEditingController();
-
+    _localCaptchaController.refresh();
     super.initState();
   }
 
@@ -45,18 +51,11 @@ class _LoginViewState extends State<LoginView> {
     );
   }
 
-  final _captchaFormKey = GlobalKey<FormState>();
-  final _configFormKey = GlobalKey<FormState>();
-  final _localCaptchaController = LocalCaptchaController();
-  final _configFormData = ConfigFormData();
-
-  var _inputCode = '';
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Local Captcha Example'),
+        title: const Text('Chapar'),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
@@ -68,32 +67,38 @@ class _LoginViewState extends State<LoginView> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  TextField(
-                    controller: _email,
-                    decoration:
-                        const InputDecoration(hintText: 'plz enter email'),
-                  ),
-                  TextField(
-                    controller: _password,
-                    obscureText: true,
-                    enableSuggestions: false,
-                    autocorrect: false,
-                    keyboardType: TextInputType.emailAddress,
-                    decoration:
-                        const InputDecoration(hintText: 'plz enter password'),
-                  ),
-                  TextButton(
-                    onPressed: () async {
-                      final email = _email.text;
-                      final password = _password.text;
-                      print(email + password);
-                      await login(password: password, userName: email);
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: ((context) => ProfileScreen())));
-                      // ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                  const SizedBox(height: 16.0),
+                  TextFormField(
+                    decoration: const InputDecoration(
+                      labelText: 'Enter email',
+                      hintText: 'Enter email',
+                      isDense: true,
+                      border: OutlineInputBorder(),
+                    ),
+                    validator: (value) {
+                      if (_email.text.isEmpty) {
+                        return '* Required field.';
+                      }
                     },
-                    child: const Text('Login'),
+                    controller: _email,
+                    keyboardType: TextInputType.emailAddress,
                   ),
+                  const SizedBox(height: 16.0),
+                  TextFormField(
+                    decoration: const InputDecoration(
+                      labelText: 'Enter password',
+                      hintText: 'Enter password',
+                      isDense: true,
+                      border: OutlineInputBorder(),
+                    ),
+                    validator: (value) {
+                      if (_password.text.isEmpty) {
+                        return '* Required field.';
+                      }
+                    },
+                    controller: _password,
+                  ),
+                  const SizedBox(height: 16.0),
                   LocalCaptcha(
                     key: ValueKey(_configFormData.toString()),
                     controller: _localCaptchaController,
@@ -119,7 +124,9 @@ class _LoginViewState extends State<LoginView> {
                     validator: (value) {
                       if (value != null && value.isNotEmpty) {
                         if (value.length != _configFormData.length) {
-                          return '* Code must be length of ${_configFormData.length}.';
+                          _localCaptchaController.refresh();
+
+                          return '* wrong code.';
                         }
 
                         final validation =
@@ -140,60 +147,66 @@ class _LoginViewState extends State<LoginView> {
                     },
                     onSaved: (value) => _inputCode = value ?? '',
                   ),
-                  const SizedBox(height: 16.0),
+                  const SizedBox(height: 25.0),
                   SizedBox(
                     height: 40.0,
                     width: double.infinity,
                     child: ElevatedButton(
-                      onPressed: () {
-                        if (_captchaFormKey.currentState?.validate() ?? false) {
-                          _captchaFormKey.currentState!.save();
-
-                          showDialog(
-                            context: context,
-                            builder: (context) {
-                              return AlertDialog(
-                                title: Text('Code: "$_inputCode" is valid.'),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () =>
-                                        Navigator.of(context).pop(),
-                                    child: const Text('OK'),
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        }
+                      onPressed: () async {
+                        await checkCreds(context);
                       },
-                      child: const Text('Validate Code'),
+                      child: const Text('Validate and login'),
                     ),
                   ),
                   const SizedBox(height: 16.0),
-                  SizedBox(
-                    height: 40.0,
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: () => _localCaptchaController.refresh(),
-                      style: ElevatedButton.styleFrom(
-                        primary: Colors.blueGrey,
-                      ),
-                      child: const Text('Refresh'),
-                    ),
-                  ),
                   const Padding(
                     padding: EdgeInsets.symmetric(vertical: 16.0),
-                    child: Divider(),
+                    // child: Divider(),
                   ),
-                  // _configForm(context),
                 ],
               ),
             ),
           ),
         ),
       ),
-      // body: LocalCaptcha(),
     );
+  }
+
+  Future<void> checkCreds(BuildContext context) async {
+    final email = _email.text;
+    final password = _password.text;
+
+    if (_captchaFormKey.currentState?.validate() ?? false) {
+      _captchaFormKey.currentState!.save();
+
+      Response res = await login(password: password, userName: email);
+      Map<String, dynamic> loginRes = jsonDecode(res.body);
+      if (loginRes['token'] != null &&
+          loginRes['token'].toString().isNotEmpty) {
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: ((context) => ProfileScreen())));
+      } else {
+        return showDialog(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: const Text("Alert  Box"),
+            content: const Text("token is null"),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(ctx).pop();
+                },
+                child: Container(
+                  color: Colors.red,
+                  padding: const EdgeInsets.all(14),
+                  child: const Text("ok"),
+                ),
+              ),
+            ],
+          ),
+        );
+      }
+    }
   }
 }
 
