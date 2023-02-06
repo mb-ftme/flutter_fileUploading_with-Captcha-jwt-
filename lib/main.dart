@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:file_upload_web/profile/view/login-view.dart';
+import 'package:file_upload_web/profile/view/profile_screen.dart';
 import 'package:file_upload_web/profile/view/register-view.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -14,7 +15,7 @@ void main() {
       primarySwatch: Colors.blueGrey,
       // primarySwatch: Colors.green,
     ),
-    home: const LoginView(),
+    home: ProfileScreen(),
   ));
 }
 
